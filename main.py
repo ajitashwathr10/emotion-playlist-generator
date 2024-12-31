@@ -138,4 +138,14 @@ class TextProcesor:
             logging.error(f"Entity extraction failed: {str(e)}")
             raise ProcessingError(f"Entity extraction failed: {str(e)}")
     
+    def _get_entity_description(self, ent, doc) -> str:
+        description_terms = []
+        for token in doc:
+            if token.head == ent.root:
+                if token.dep_ in ["amod", "advmod"]:
+                    description_terms.append(token.text)
+        return " ".join(description_terms) if description_terms else ""
+    
+    
+
 
