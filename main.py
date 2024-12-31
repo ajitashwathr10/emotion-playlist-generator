@@ -159,7 +159,14 @@ class TextProcesor:
         except Exception as e:
             logger.error(f"Action detection failed: {str(e)}")
             raise ProcessingError(f"Action detection failed: {str(e)}")
-    
+
+    def _extract_verb_phrase(self, verb_token) -> str:
+        phrase_tokens = [verb_token.text]
+        for child in verb_token.children:
+            if child.dep_ in ["dobj", "pobj"]:
+                phrase_tokens.append(child.text)
+        return " ".join(phrase_tokens)
+
          
 
 
