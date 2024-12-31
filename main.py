@@ -167,6 +167,27 @@ class TextProcesor:
                 phrase_tokens.append(child.text)
         return " ".join(phrase_tokens)
 
-         
+    def analyze_mood(self, text: str) -> EmotionType:
+        try:
+            inputs = self.tokenizer(text, return_tensors = "pt", truncation = True, max_length = 512)
+            outputs = self.emotion_model(**inputs)
+            emotion_probs = F.softmax(outputs.logits, dim = 1)
+
+            emotion_mapping = {
+                0: EmotionType.ANGRY,
+                1: EmotionType.HAPPY,
+                2: EmotionType.SAD,
+                3: EmotionType.DISGUST,
+                4: EmotionType.FEAR,
+                5: EmotionType.NEUTRAL,
+                6: EmotionType.SURPRISE,
+                7: EmotionType.CONFUSED
+            }
+            predicted_emotion = emotion_mapping[torch.argmax(emotion_probs).item()]
+            return predicted_emotion
+        except Exception as e:
+            logger.error(f"Mood analysis failed: {str(e)}")
+            raise ProcessingError(f"Mood analysis failed: {str(e)}")
+             
 
 
