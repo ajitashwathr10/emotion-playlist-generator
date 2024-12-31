@@ -317,5 +317,19 @@ class LayoutEngine:
         score *= entity.importance
         return score
     
+    def _calculate_scale(
+        self, 
+        entity: Entity,
+        depth_layers: List[List[str]]
+    ) -> float:
+        if entity.name in depth_layers[0]:
+            return 1.0 * entity.importance
+        elif entity.name in depth_layers[1]:
+            return 0.7 * entity.importance
+        else:
+            return 0.4 * entity.importance
+    
+    
+    
 
 
