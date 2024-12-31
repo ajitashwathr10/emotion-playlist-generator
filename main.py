@@ -256,5 +256,17 @@ class LayoutEngine:
             logger.error(f"Layout generation failed: {str(e)}")
             raise LayoutError(f"Layout generation failed: {str(e)}")
     
+    def _create_depth_layers(self, entities: List[Entity]) -> List[List[str]]:
+        layers = [[], [], []]
+        for entity in entities:
+            if entity.type in ["PERSON", "ORG"] and entity.importance > 1.2:
+                layers[0].append(entity.name)
+            elif entity.type in ["PERSON", "ORG", "PRODUCT"]:
+                layers[1].append(entity.name)
+            else:
+                layers[2].append(entity.name)
+        return layers
+    
+    
 
 
