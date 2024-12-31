@@ -358,7 +358,20 @@ class LayoutEngine:
                 "y": y_sum / len(involved_entities)
             }
         return {"x": 0.5, "y": 0.5}
+
+class ImageGenerator:
+    def __init__(self, model_path: Optional[str] = None):
+        try:
+            self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+            self.model = self._load_model(model_path)
+            logger.info("Successfully initialized image generation model")
+        except Exception as e:
+            logger.error(f"Failed to initialize image generation model: {str(e)}")
+            raise ImageGenerationError("Failed to initialize image generation model")
+    
+    def _load_model(self, model_path: Optional[str]) -> Any:
         
+
 
     
 
