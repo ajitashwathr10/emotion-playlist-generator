@@ -218,6 +218,43 @@ class LayoutEngine:
             logger.error(f"Failed to load composition rules: {str(e)}")
             raise LayoutError("Failed to load composition rules")
 
-    def generate_layout(self, scene: Scene) -> Dict:    
+    def generate_layout(self, scene: Scene) -> Dict:
+        try:
+            layout = {
+                "frame_size": (1024, 1024),
+                "entities": {},
+                "focal_point": None,
+                "depth_layers": []
+            }
+            sorted_entities = sorted(
+                scene.entities,
+                key = lambda x: x.importance,
+                reverse = True
+            )
+            depth_layers = self._create_depth_layers(sorted_entities)
+            layout["depth_layers"] = depth_layers
+            occupied_positions = set()
+            for entity in sorted_entities:
+                position = self._calculate_optimal_position(
+                    entity,
+                    occupied_positions,
+                    layout['frame_size']
+                )
+                layout["entites"][entity.name] = {
+                    "position": position,
+                    "scale": self._calculate_scale(entity, depth_layers),
+                    "rotation": self._calculate_rotation(entity, scene.actions)
+                }
+                occupied_positions.add(position["x"], position["y"])
+            if scene.actions:
+                layout["focal_point"] = self._determine_focal_point(
+                    scene.actions[0],
+                    layout["entities"]
+                )
+            return layout
+        except Exception as e:
+            logger.error(f"Layout generation failed: {str(e)}")
+            raise LayoutError(f"Layout generation failed: {str(e)}")
+    
 
 
