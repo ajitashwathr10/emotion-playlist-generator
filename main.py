@@ -116,4 +116,26 @@ class TextProcesor:
             raise ProcessingError("Failed to segment scenes")
         
     def extract_entities(self, text: str) -> List[Entity]:
+        try:
+            doc = self.nlp(text)
+            entities = []
+            for ent in doc.ents:
+                importance = 1.0
+                if ent.label_ in ["PERSON", "ORG"]:
+                    importance *= 1.5
+                attributes = {
+                    "description": self._get_entity_description(ent, doc),
+                    "label": ent.label_
+                }
+                entities.append(Entity(
+                    name = ent.text,
+                    type = ent.label_,
+                    attributes = attributes,
+                    importance = importance
+                ))
+            return entities
+        except Exception as e:
+            logging.error(f"Entity extraction failed: {str(e)}")
+            raise ProcessingError(f"Entity extraction failed: {str(e)}")
+    
 
