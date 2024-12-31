@@ -267,6 +267,32 @@ class LayoutEngine:
                 layers[2].append(entity.name)
         return layers
     
+    def _calculate_optimal_position(
+        self, 
+        entity: Entity,
+        occupied_position: set,
+        frame_size: Tuple[int, int]
+    ) -> Dict[str, float]:
+        grid = np.zero(self.grid_size)
+        for pos in occupied_position:
+            grid_x = int(pos[0] * self.grid[0])
+            grid_y = int(pos[1] * self.grid[1])
+            grid[grid_y, grid_x] = 1
+        scores = np.zeros_like(grid)
+        for y in range(self.grid_size[0]):
+            for x in range(self.grid_size[1]):
+                if grid[y, x] == 0:
+                    scores[y, x] = self._calculate_optimal_position(
+                        x / self.grid_size[0],
+                        y / self.grid_size[1],
+                        entity
+                    )
+        best_pos = np.unravel_index(np.argmax(scores), scores.shape)
+        return {
+            "x": best_pos[1] / self.grid_size[0],
+            "y": best_pos[0] / self.grid_size[1]
+        }
+
     
 
 
