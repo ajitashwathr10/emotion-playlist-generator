@@ -146,6 +146,20 @@ class TextProcesor:
                     description_terms.append(token.text)
         return " ".join(description_terms) if description_terms else ""
     
+    def detect_actions(self, text: str) -> List[str]:
+        try:
+            doc = self.nlp(text)
+            actions = []
+            for token in doc:
+                if token.pos_ == "VERB" and token.dep_ in ["ROOT", "xcomp"]:
+                    verb_phrase = self._extract_verb_phrase(token)
+                    if verb_phrase:
+                        actions.append(verb_phrase)
+            return actions
+        except Exception as e:
+            logger.error(f"Action detection failed: {str(e)}")
+            raise ProcessingError(f"Action detection failed: {str(e)}")
     
+         
 
 
