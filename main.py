@@ -369,7 +369,23 @@ class ImageGenerator:
             logger.error(f"Failed to initialize image generation model: {str(e)}")
             raise ImageGenerationError("Failed to initialize image generation model")
     
-    def _load_model(self, model_path: Optional[str]) -> Any:
+    def _load_model(self) -> torch.nn.Module:
+        return None
+
+    def generate_scene_image(self, scene: Scene) -> bytes:
+        try:
+            prompt = self._create_image_prompt(scene)
+            image_tensor = self._generate_image(
+                prompt,
+                scene.layout["frame_size"],
+                scene.mood.value
+            )
+            image_bytes = self._tensor_to_bytes(image_tensor)
+            styled_image = self.apply_style_transfer(image_bytes, scene.mood)
+            return styled_image
+        except Exception as e:
+            logger.error(f"Image generation failed: {str(e)}")
+            raise ImageGenerationError(f"Image generation failed: {str(e)}")
         
 
 
