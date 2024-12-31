@@ -293,6 +293,29 @@ class LayoutEngine:
             "y": best_pos[0] / self.grid_size[1]
         }
 
+    def _calculate_position_score(
+        self,
+        x: float,
+        y: float,
+        entity: Entity
+    ) -> float:
+        score = 0.0
+        if self.composition_rules["rule_of_thirds"]:
+            for third in [0.333, 0.667]:
+                score += (1 - min(abs(x - third), abs(y - third))) * 0.5
+        if self.composition_rules["golden_ratio"]:
+            golden_ratio = 0.618
+            golden_points = [
+                (golden_ratio, golden_ratio),
+                (1 - golden_ratio, golden_ratio),
+                (golden_ratio, 1- golden_ratio),
+                (1 - golden_ratio, 1 - golden_ratio)
+            ]
+            for px, py in golden_points:
+                distance = np.sqrt((x - px) ** 2 + (y - py) ** 2)
+                score += (1 - distance) * 0.3
+        score *= entity.importance
+        return score
     
 
 
