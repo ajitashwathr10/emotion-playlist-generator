@@ -341,7 +341,25 @@ class LayoutEngine:
                     rotation = 45.0
         return rotation
     
-    
+    def _determine_focal_point(
+        self,
+        main_action: str,
+        entity_layouts: Dict
+    ) -> Dict[str, float]:
+        involved_entities = [
+            name for name in entity_layouts.keys()
+            if name.lower() in main_action.lower()
+        ]
+        if involved_entities:
+            x_sum = sum(entity_layouts[e]["position"]["x"] for e in involved_entities)
+            y_sum = sum(entity_layouts[e]["position"]["y"] for e in involved_entities)
+            return {
+                "x": x_sum / len(involved_entities),
+                "y": y_sum / len(involved_entities)
+            }
+        return {"x": 0.5, "y": 0.5}
+        
+
     
 
 
