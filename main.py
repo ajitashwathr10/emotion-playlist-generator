@@ -329,6 +329,18 @@ class LayoutEngine:
         else:
             return 0.4 * entity.importance
     
+    def _calculate_rotation(
+        self,
+        entity: Entity,
+        actions: List[str]
+    ) -> float:
+        rotation = 0.0
+        for action in actions:
+            if entity.name.lower() in action.lower():
+                if any(term in action.lower() for term in ["turn", "spin", "rotate"]):
+                    rotation = 45.0
+        return rotation
+    
     
     
 
