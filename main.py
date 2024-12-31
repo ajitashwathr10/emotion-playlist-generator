@@ -188,6 +188,12 @@ class TextProcesor:
         except Exception as e:
             logger.error(f"Mood analysis failed: {str(e)}")
             raise ProcessingError(f"Mood analysis failed: {str(e)}")
-             
+
+class LayoutEngine:
+    def __init__(self):
+        self.composition_rules = self.load_composition_rules()
+        self.grid_size = (8, 8)
+    
+         
 
 
