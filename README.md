@@ -1,6 +1,4 @@
-# AI-Powered Visual Storytelling System
+# Emotion Based Spotify Playlist Generator
 
 ## Description
-A project that creates visual stories (e.g., short comic strips, storyboards) from a series of text descriptions or a script.
-Using computer vision and NLP, the system can generate illustrations or scene layouts that align with the provided text. 
-It could be an interesting tool for creators who want to quickly visualize their ideas.
+This Python application combines natural language processing with Spotify's API to turn your emotions into music. It uses the TextBlob library to analyze the sentiment of user-provided text, categorizing the emotional state into joy, sadness, anger, or calm. Based on this analysis, it leverages Spotify's recommendation engine to curate a playlist that matches the detected mood, considering factors like valence, energy, and tempo. The modern CustomTkinter GUI provides an intuitive interface where users can input their feelings and receive instant access to mood-appropriate songs from Spotify's vast library, complete with direct links to listen on the platform.
