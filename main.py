@@ -5,6 +5,8 @@ from spotipy.oauth2 import SpotifyClientCredentials
 import random
 import webbrowser
 from typing import Dict, List, Tuple
+import os
+from dotenv import load_dotenv
 
 class Spotify:
     def __init__(self, client_id: str, client_secret: str):
@@ -40,7 +42,7 @@ class Spotify:
             }
         }
     
-    def get_recommedations(self, emotion: str, limit: int = 5) -> List[Dict]:
+    def get_recommendations(self, emotion: str, limit: int = 5) -> List[Dict]:
         emotion_props = self.emotion_mapping[emotion]
         try: 
             recommendations = self.sp.recommendations(
@@ -214,13 +216,13 @@ class Playlist(ctk.CTk):
         ok_button.pack(pady = 20)
 
 def main():
-    CLIENT_ID = "YOUR_SPOTIFY_CLIENT_ID"
-    CLIENT_SECRET = "YOUR_SPOTIFY_CLIENT_SECRET"
+    CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
+    CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
+    if not CLIENT_ID or not CLIENT_SECRET:
+        raise ValueError("Spotify API credentials not set in environment variables.")
     spotify_manager = Spotify(CLIENT_ID, CLIENT_SECRET)
     app = Playlist(spotify_manager)
     app.mainloop()
 
 if __name__ == "__main__":
     main()
-
-        
