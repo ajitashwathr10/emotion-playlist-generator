@@ -216,10 +216,9 @@ class Playlist(ctk.CTk):
         ok_button.pack(pady = 20)
 
 def main():
+    load_dotenv('.env')
     CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
     CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
-    if not CLIENT_ID or not CLIENT_SECRET:
-        raise ValueError("Spotify API credentials not set in environment variables.")
     spotify_manager = Spotify(CLIENT_ID, CLIENT_SECRET)
     app = Playlist(spotify_manager)
     app.mainloop()
